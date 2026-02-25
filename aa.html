@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>KACHALLA ACADEMY KIYAWA</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#0a1f44;color:white;}
+header{background:#001a33;padding:15px;text-align:center;position:sticky;top:0;z-index:100;}
+header img{width:80px;}
+nav a{color:gold;margin:0 15px;text-decoration:none;font-weight:bold;transition:0.3s;}
+nav a:hover{color:white;}
+.container{padding:20px;}
+.card{background:#112d63;padding:15px;margin:10px;border-radius:10px;text-align:center;transition:0.3s;box-shadow:0 0 10px rgba(0,0,0,0.5);}
+.card:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(0,0,0,0.6);}
+button{background:gold;border:none;padding:8px 15px;cursor:pointer;font-weight:bold;transition:0.3s;}
+button:hover{background:#ffd633;}
+.menu-toggle{display:none;font-size:28px;cursor:pointer;color:gold;}
+input,textarea,select{padding:8px;margin:5px 0;width:100%;border-radius:5px;border:none;}
+#players-list .card img,#gallery-list .card img,#coach-img img{width:120px;border-radius:10px;}
+#coach-img img{width:150px;border-radius:50%;}
+@media(max-width:768px){
+nav{display:none;flex-direction:column;background:#001a33;position:absolute;top:70px;left:0;width:100%;text-align:center;}
+nav a{padding:15px;display:block;border-bottom:1px solid #0a1f44;}
+.menu-toggle{display:block;}
+}
+@keyframes fadeIn{from{opacity:0; transform:translateY(20px);} to{opacity:1; transform:translateY(0);}}
+.card{animation:fadeIn 0.6s ease-in;}
+.status-completed{color:limegreen;font-weight:bold;}
+.status-upcoming{color:gold;font-weight:bold;}
+</style>
+</head>
+<body>
+<header>
+<img src="logo.png">
+<h1>KACHALLA ACADEMY KIYAWA</h1>
+<span class="menu-toggle" onclick="toggleMenu()">☰</span>
+<nav id="navMenu">
+<a href="#home">Home</a>
+<a href="#about">About</a>
+<a href="#players">Players</a>
+<a href="#gallery">Gallery</a>
+<a href="#coach">Coach</a>
+<a href="#contact">Contact</a>
+<a href="#admin">Admin</a>
+</nav>
+</header>
+
+<script>
+function toggleMenu(){
+var menu=document.getElementById("navMenu");
+menu.style.display=(menu.style.display==="flex")?"none":"flex";
+}
+</script>
+
+<div class="container" id="home">
+<h2>Welcome to Kachalla Academy</h2>
+<p>We build future football stars ⚽🔥</p>
+</div>
+
+<div class="container" id="about">
+<div class="card"><h2>🏆 About Us</h2><p>Kachalla Academy Kiyawa is a professional football academy focused on developing young football talents.</p></div>
+<div class="card"><h2>🎯 Mission</h2><p>Develop talented footballers with discipline, dedication, and professionalism.</p></div>
+<div class="card"><h2>👁 Vision</h2><p>Become one of the leading football academies in Nigeria producing skilled, responsible, successful players.</p></div>
+</div>
+
+<div class="container" id="players">
+<h2>Our Players</h2>
+<button onclick="showAddPlayer()">Add Player</button>
+<div id="players-list">
+<div class="card">
+<img src="logo.png"
+ alt="Player1">
+<h3>Player 1</h3>
+<p>Position: Forward</p>
+<p>Age: 16</p>
+<p>Performance: 8.5/10</p>
+<p>Minutes Played: 90</p>
+<p>Goals/Assists: 2/1</p>
+<p class="status-completed">Status: Completed</p>
+<button onclick="removePlayer(this)">Remove Player</button>
+</div>
+</div>
+</div>
+
+<div class="container" id="add-player-form" style="display:none;">
+<h3>Add Player</h3>
+<input type="text" id="newName" placeholder="Player Name">
+<input type="text" id="newPosition" placeholder="Position">
+<input type="number" id="newAge" placeholder="Age">
+<input type="file" id="newImage">
+<input type="number" id="newPerformance" placeholder="Performance (0-10)">
+<input type="number" id="newMinutes" placeholder="Minutes Played">
+<input type="text" id="newGoals" placeholder="Goals / Assists">
+<select id="newStatus">
+<option value="Completed">Completed</option>
+<option value="Upcoming">Upcoming</option>
+</select>
+<button onclick="addPlayer()">Add</button>
+<button onclick="hideAddPlayer()">Cancel</button>
+</div>
+
+<script>
+function showAddPlayer(){ document.getElementById('add-player-form').style.display='block'; }
+function hideAddPlayer(){ document.getElementById('add-player-form').style.display='none'; }
+function removePlayer(btn){ btn.parentElement.remove(); }
+function addPlayer(){
+  var name=document.getElementById('newName').value;
+  var pos=document.getElementById('newPosition').value;
+  var age=document.getElementById('newAge').value;
+  var file=document.getElementById('newImage').files[0];
+  var perf=document.getElementById('newPerformance').value;
+  var mins=document.getElementById('newMinutes').value;
+  var goals=document.getElementById('newGoals').value;
+  var status=document.getElementById('newStatus').value;
+  if(!name||!pos||!age||!file||!perf||!mins||!goals){ alert("Fill all fields!"); return; }
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var card=document.createElement('div');
+    card.className='card';
+    var statusClass=(status==="Completed")?"status-completed":"status-upcoming";
+    card.innerHTML=`<img src="${e.target.result}" alt="New Player">
+<h3>${name}</h3>
+<p>Position: ${pos}</p>
+<p>Age: ${age}</p>
+<p>Performance: ${perf}/10</p>
+<p>Minutes Played: ${mins}</p>
+<p>Goals/Assists: ${goals}</p>
+<p class="${statusClass}">Status: ${status}</p>
+<button onclick="removePlayer(this)">Remove Player</button>`;
+    document.getElementById('players-list').appendChild(card);
+    hideAddPlayer();
+    document.getElementById('newName').value='';
+    document.getElementById('newPosition').value='';
+    document.getElementById('newAge').value='';
+    document.getElementById('newImage').value='';
+    document.getElementById('newPerformance').value='';
+    document.getElementById('newMinutes').value='';
+    document.getElementById('newGoals').value='';
+  }
+  reader.readAsDataURL(file);
+}
+</script>
+
+<div class="container" id="gallery">
+<h2>Gallery</h2>
+<button onclick="showAddGallery()">Add Image</button>
+<div id="gallery-list">
+<div class="card"><img src="https://via.placeholder.com/200" alt="Gallery1"><br>
+<button onclick="removeGallery(this)">Remove Image</button></div>
+</div>
+</div>
+
+<div class="container" id="add-gallery-form" style="display:none;">
+<h3>Add Gallery Image</h3>
+<input type="file" id="galleryImage">
+<button onclick="addGallery()">Add</button>
+<button onclick="hideAddGallery()">Cancel</button>
+</div>
+
+<script>
+function showAddGallery(){ document.getElementById('add-gallery-form').style.display='block'; }
+function hideAddGallery(){ document.getElementById('add-gallery-form').style.display='none'; }
+function removeGallery(btn){ btn.parentElement.remove(); }
+function addGallery(){
+  var file=document.getElementById('galleryImage').files[0];
+  if(!file){ alert("Select image!"); return; }
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var card=document.createElement('div');
+    card.className='card';
+    card.innerHTML=`<img src="${e.target.result}" alt="Gallery Image"><br><button onclick="removeGallery(this)">Remove Image</button>`;
+    document.getElementById('gallery-list').appendChild(card);
+    hideAddGallery();
+    document.getElementById('galleryImage').value='';
+  }
+  reader.readAsDataURL(file);
+}
+</script>
+
+<div class="container" id="coach">
+<h2>Head Coach</h2>
+<p><strong>Coach Name:</strong> ABBAS GARBA</p>
+<div id="coach-img">
+<img src="https://via.placeholder.com/150" alt="Coach">
+</div>
+<button onclick="showAddCoach()">Upload Coach Photo</button>
+<div id="add-coach-form" style="display:none;">
+<input type="file" id="coachFile">
+<button onclick="addCoach()">Upload</button>
+<button onclick="hideAddCoach()">Cancel</button>
+</div>
+
+<script>
+function showAddCoach(){ document.getElementById('add-coach-form').style.display='block'; }
+function hideAddCoach(){ document.getElementById('add-coach-form').style.display='none'; }
+function addCoach(){
+  var file=document.getElementById('coachFile').files[0];
+  if(!file){ alert("Select image!"); return; }
+  var reader=new FileReader();
+  reader.onload=function(e){
+    document.querySelector('#coach-img img').src=e.target.result;
+    hideAddCoach();
+    document.getElementById('coachFile').value='';
+  }
+  reader.readAsDataURL(file);
+}
+</script>
+
+<div class="container" id="contact">
+<h2>Contact Us</h2>
+<form>
+<input type="text" placeholder="Your Name"><br>
+<input type="email" placeholder="Your Email"><br>
+<textarea placeholder="Message"></textarea><br>
+<button type="submit">Send</button>
+</form>
+</div>
+
+<div class="container" id="admin">
+<h2>Admin Login</h2>
+<div id="login-form">
+<input type="text" id="username" placeholder="Username"><br>
+<input type="password" id="password" placeholder="Password"><br>
+<button onclick="login()">Login</button>
+<p id="login-msg" style="color:red;"></p>
+</div>
+<div id="dashboard" style="display:none;">
+<h2>Admin Dashboard</h2>
+<p>Welcome, Admin!</p>
+<button onclick="logout()">Logout</button>
+</div>
+
+<script>
+function login(){
+  var user=document.getElementById('username').value.trim().toLowerCase();
+  var pass=document.getElementById('password').value.trim();
+  if(user==='kachalla' && pass==='KACHALLA123'){
+    document.getElementById('login-form').style.display='none';
+    document.getElementById('dashboard').style.display='block';
+    alert("Login successful!");
+  }else{
+    document.getElementById('login-msg').innerText="Wrong username or password";
+  }
+}
+function logout(){
+  document.getElementById('dashboard').style.display='none';
+  document.getElementById('login-form').style.display='block';
+}
+</script>
+
+</body>
+</html>
